@@ -92,7 +92,8 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
         Text(
             text = stringResource(R.string.add_expense),
             style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center
         )
 
         Text(

@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -123,12 +124,14 @@ fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController
     ) {
         Text(
             text = stringResource(id = R.string.expense_total, formatSumValues(totalExpense)),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
         )
 
         Text(
             text = stringResource(id = R.string.income_total, formatSumValues(totalIncome)),
-            style = MaterialTheme.typography.headlineSmall
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
         )
 
         Button(

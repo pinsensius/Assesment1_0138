@@ -8,7 +8,7 @@
     <string name="add_expense">Add Expense</string>
     <string name="money_label">Money</string>
     <string name="title_label">Title</string>
-    <string name="tags_label">Tags</string>
+    <string name="tags_label">Interest</string>
     <string name="date_label">Date</string>
     <string name="rp">$</string>
     <string name="primary">Primary</string>
@@ -19,14 +19,14 @@
     <string name="title_error">Please input the proper data!</string>
     <string name="values_error">Please input the valid amount!</string>
     <string name="date_error">Please pick the date!</string>
-    <string name="tags_error">Please pick the tag!</string>
+    <string name="tags_error">Please pick the interest!</string>
     <string name="empty_income">No Income Data</string>
     <string name="empty_expense">No Expense Data</string>
-    <string name="tags_data">Tags : %1$s</string>
+    <string name="tags_data">Interest : %1$s</string>
     <string name="date_data">Date : %1$s</string>
     <string name="share">Share</string>
     <string name="share_template">Expense : %1$s\nIncome : %2$s</string>
-    <string name="share_title">Share data with...</string>
+    <string name="share_title">Share data with…</string>
 
 
 </resources>

@@ -90,6 +90,7 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             text = stringResource(id = R.string.add_income),
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center
         )
         Text(
             text = stringResource(id = R.string.form_intro),
