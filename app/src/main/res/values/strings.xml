@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Money Tracker</string>
+    <string name="expense_total">Expense : %1$s</string>
+    <string name="income_total">Income : %1$s</string>
+    <string name="income_list">Income List</string>
+    <string name="expense_list">Expense List</string>
+    <string name="add_income">Add Income</string>
+    <string name="add_expense">Add Expense</string>
+</resources>
