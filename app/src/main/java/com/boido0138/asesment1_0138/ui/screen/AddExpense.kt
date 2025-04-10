@@ -1,8 +1,11 @@
 package com.boido0138.asesment1_0138.ui.screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowDropDown
@@ -13,6 +16,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -85,10 +90,18 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
     val dateState = rememberDatePickerState()
 
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.budget),
+            contentDescription = "Expense",
+            modifier = Modifier.size(120.dp).padding(vertical = 20.dp),
+            contentScale = ContentScale.Fit
+        )
+
         Text(
             text = stringResource(R.string.add_expense),
             style = MaterialTheme.typography.displaySmall,
@@ -209,9 +222,9 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
         Button(
             onClick = {
                 titleError = title.isBlank()
-                valueError = value.isBlank() || value.toIntOrNull() == null
-                tagsError = tags.isBlank()
-                dateError = date.isBlank()
+                valueError = value.isBlank() || value.toIntOrNull() == null || value.toInt() == 0
+                tagsError = tags.isBlank() || tags == "Tags"
+                dateError = date.isBlank() || date == "Date"
 
                 if (!titleError && !valueError && !tagsError && !dateError) {
                     ExpenseList.addToExpenseLis(Expense(title, value.toInt(), tags, date))

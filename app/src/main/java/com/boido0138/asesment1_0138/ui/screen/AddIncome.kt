@@ -1,8 +1,11 @@
 package com.boido0138.asesment1_0138.ui.screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.DateRange
@@ -11,6 +14,8 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -82,10 +87,17 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
     val dateState = rememberDatePickerState()
 
     Column(
-        modifier = modifier,
+        modifier = modifier.verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Image(
+            painter = painterResource(id = R.drawable.growth),
+            contentDescription = "Income",
+            modifier = Modifier.size(120.dp).padding(vertical = 20.dp),
+            contentScale = ContentScale.Fit
+        )
+
         Text(
             text = stringResource(id = R.string.add_income),
             style = MaterialTheme.typography.displaySmall,
@@ -172,8 +184,8 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
         Button(
             onClick = {
                 titleError = title.isBlank()
-                valueError = value.isBlank() || value.toIntOrNull() == null
-                dateError = date.isBlank()
+                valueError = value.isBlank() || value.toIntOrNull() == null || value.toInt() == 0
+                dateError = date.isBlank() || date == "Date"
 
                 if (!titleError && !valueError && !dateError) {
                     IncomeList.addToIncomeList(Income(title, value.toInt(), date))

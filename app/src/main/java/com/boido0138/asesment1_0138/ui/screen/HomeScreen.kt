@@ -3,13 +3,16 @@ package com.boido0138.asesment1_0138.ui.screen
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material3.Button
@@ -30,7 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,17 +85,17 @@ fun HomeScreen(navController: NavController) {
                             onDismissRequest = { menuExpanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.income_list)) },
+                                text = { Text(stringResource(id = R.string.expense_list)) },
                                 onClick = {
-                                    navController.navigate(Screen.IncomeList.route)
+                                    navController.navigate(Screen.ExpenseList.route)
                                     menuExpanded = false
                                 }
                             )
 
                             DropdownMenuItem(
-                                text = { Text(stringResource(id = R.string.expense_list)) },
+                                text = { Text(stringResource(id = R.string.income_list)) },
                                 onClick = {
-                                    navController.navigate(Screen.ExpenseList.route)
+                                    navController.navigate(Screen.IncomeList.route)
                                     menuExpanded = false
                                 }
                             )
@@ -115,23 +120,43 @@ fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController
     val totalExpense = ExpenseList.sumExpense()
     val totalIncome = IncomeList.sumIncome()
 
+    val totalMoney = totalIncome - totalExpense
+
     val context = LocalContext.current
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
+        verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.money_bag),
+            contentDescription = "Money Bag",
+            modifier = Modifier.size(180.dp).padding(vertical = 20.dp),
+            contentScale = ContentScale.Fit
+        )
+
         Text(
             text = stringResource(id = R.string.expense_total, formatSumValues(totalExpense)),
-            style = MaterialTheme.typography.headlineSmall,
-            textAlign = TextAlign.Center
+            style = MaterialTheme.typography.titleLarge,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(vertical = 12.dp)
         )
 
         Text(
             text = stringResource(id = R.string.income_total, formatSumValues(totalIncome)),
-            style = MaterialTheme.typography.headlineSmall,
+            style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
+        )
+
+
+        Text(
+            text = stringResource(id = R.string.money_total, formatSumValues(totalMoney)),
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 12.dp, bottom = 32.dp)
+
         )
 
         Button(
@@ -147,6 +172,8 @@ fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController
                 style = MaterialTheme.typography.bodyLarge
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = {
@@ -166,11 +193,11 @@ fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController
             onClick = {
                 shareKeuangan(
                     context = context,
-                    message = context.getString(R.string.share_template, formatSumValues(totalExpense),formatSumValues(totalIncome))
+                    message = context.getString(R.string.share_template, formatSumValues(totalExpense),formatSumValues(totalIncome), formatSumValues(totalMoney))
                 )
             },
             modifier =  Modifier
-                .padding(top = 12.dp)
+                .padding(top = 32.dp)
                 .fillMaxWidth(0.8f)
                 .height(50.dp)
         ) {

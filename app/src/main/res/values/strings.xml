@@ -1,32 +1,31 @@
 <resources>
     <string name="app_name">Money Tracker</string>
-    <string name="expense_total">Expense : %1$s</string>
-    <string name="income_total">Income : %1$s</string>
-    <string name="income_list">Income List</string>
-    <string name="expense_list">Expense List</string>
+    <string name="expense_total">Expenses: %1$s</string>
+    <string name="income_total">Income: %1$s</string>
+    <string name="money_total">Money Now: %1$s</string>
+    <string name="income_list">Income Records</string>
+    <string name="expense_list">Expense Records</string>
     <string name="add_income">Add Income</string>
     <string name="add_expense">Add Expense</string>
-    <string name="money_label">Money</string>
+    <string name="confirm">Save Entry</string>
+    <string name="share">Share</string>
+    <string name="money_label">Amount</string>
     <string name="title_label">Title</string>
-    <string name="tags_label">Interest</string>
+    <string name="tags_label">Category</string>
     <string name="date_label">Date</string>
     <string name="rp">$</string>
     <string name="primary">Primary</string>
     <string name="secondary">Secondary</string>
     <string name="tertiary">Tertiary</string>
-    <string name="confirm">Confirmation</string>
-    <string name="form_intro">Please enter the input data you wish to include in the history, in the column below.</string>
-    <string name="title_error">Please input the proper data!</string>
-    <string name="values_error">Please input the valid amount!</string>
-    <string name="date_error">Please pick the date!</string>
-    <string name="tags_error">Please pick the interest!</string>
-    <string name="empty_income">No Income Data</string>
-    <string name="empty_expense">No Expense Data</string>
-    <string name="tags_data">Interest : %1$s</string>
-    <string name="date_data">Date : %1$s</string>
-    <string name="share">Share</string>
-    <string name="share_template">Expense : %1$s\nIncome : %2$s</string>
-    <string name="share_title">Share data with…</string>
-
-
+    <string name="form_intro">Please fill out the fields below to add a new transaction to your history.</string>
+    <string name="title_error">Please enter a valid title.</string>
+    <string name="values_error">Please enter a valid amount.</string>
+    <string name="date_error">Please select a date.</string>
+    <string name="tags_error">Please choose a category.</string>
+    <string name="empty_income">No income records found.</string>
+    <string name="empty_expense">No expense records found.</string>
+    <string name="tags_data">Category: %1$s</string>
+    <string name="date_data">Date: %1$s</string>
+    <string name="share_template">Expenses: %1$s\nIncome: %2$s\n\nMoney Now: %3$s</string>
+    <string name="share_title">Share your data via…</string>
 </resources>
