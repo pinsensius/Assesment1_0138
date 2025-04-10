@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
+import com.boido0138.asesment1_0138.model.Income
+import com.boido0138.asesment1_0138.model.IncomeList
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import java.util.Calendar
 
@@ -68,13 +70,13 @@ fun AddIncomeScreen(navController: NavController){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavController) {
-    var value by rememberSaveable { mutableStateOf("") }
+    var value by rememberSaveable { mutableStateOf(IncomeList.tempIncome.values.toString()) }
     var valueError by rememberSaveable { mutableStateOf(false) }
 
-    var title by rememberSaveable { mutableStateOf("") }
+    var title by rememberSaveable { mutableStateOf(IncomeList.tempIncome.title) }
     var titleError by rememberSaveable { mutableStateOf(false) }
 
-    var date by rememberSaveable { mutableStateOf("") }
+    var date by rememberSaveable { mutableStateOf(IncomeList.tempIncome.date) }
     var dateError by rememberSaveable { mutableStateOf(false) }
     var dateButtonExpanded by rememberSaveable { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
@@ -102,6 +104,7 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             value = title,
             onValueChange = {
                 title = it
+                IncomeList.tempIncome = Income(title, value.toIntOrNull() ?: 0, date)
             },
             label = { Text(stringResource(id = R.string.title_label)) },
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
@@ -118,6 +121,7 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             value = value,
             onValueChange = {
                 value = it
+                IncomeList.tempIncome = Income(title, value.toIntOrNull() ?: 0, date)
             },
             label = { Text(stringResource(id = R.string.money_label)) },
             leadingIcon = { Text(stringResource(id = R.string.rp)) },
@@ -148,6 +152,7 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
                             dateState.selectedDateMillis?.let { millis ->
                                 val cal = Calendar.getInstance().apply { timeInMillis = millis }
                                 date = "${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.YEAR)}"
+                                IncomeList.tempIncome = Income(title, value.toIntOrNull() ?: 0, date)
                             }
                             dateButtonExpanded = false
                         }) {
@@ -170,6 +175,8 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
                 dateError = date.isBlank()
 
                 if (!titleError && !valueError && !dateError) {
+                    IncomeList.addToIncomeList(Income(title, value.toInt(), date))
+                    IncomeList.tempIncome = Income("", 0,"Date")
                     navController.popBackStack()
                 }
             },

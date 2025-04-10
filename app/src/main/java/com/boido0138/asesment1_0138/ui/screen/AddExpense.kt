@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
+import com.boido0138.asesment1_0138.model.Expense
+import com.boido0138.asesment1_0138.model.ExpenseList
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import java.util.*
 
@@ -62,13 +64,13 @@ fun AddExpenseScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavController) {
-    var value by rememberSaveable { mutableStateOf("") }
+    var value by rememberSaveable { mutableStateOf(ExpenseList.tempExpense.values.toString()) }
     var valueError by rememberSaveable { mutableStateOf(false) }
 
-    var title by rememberSaveable { mutableStateOf("")}
+    var title by rememberSaveable { mutableStateOf((ExpenseList.tempExpense.title)) }
     var titleError by rememberSaveable { mutableStateOf(false) }
 
-    var tags by rememberSaveable { mutableStateOf("") }
+    var tags by rememberSaveable { mutableStateOf((ExpenseList.tempExpense.tags)) }
     var tagsError by rememberSaveable { mutableStateOf(false) }
     var tagsExpanded by rememberSaveable { mutableStateOf(false) }
     val tagsList = listOf(
@@ -77,7 +79,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
         stringResource(R.string.tertiary)
     )
 
-    var date by rememberSaveable { mutableStateOf("") }
+    var date by rememberSaveable { mutableStateOf((ExpenseList.tempExpense.date)) }
     var dateError by rememberSaveable { mutableStateOf(false) }
     var dateExpanded by rememberSaveable { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
@@ -106,6 +108,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
             value = title,
             onValueChange = {
                 title = it
+                ExpenseList.tempExpense = Expense(title,value.toIntOrNull() ?: 0, tags, date)
             },
             label = { Text(stringResource(R.string.title_label)) },
             trailingIcon = { IconSelector(titleError) },
@@ -122,6 +125,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
             value = value,
             onValueChange = {
                 value = it
+                ExpenseList.tempExpense = Expense(title, value.toIntOrNull() ?: 0, tags, date)
             },
             label = { Text(stringResource(R.string.money_label)) },
             leadingIcon = { Text(stringResource(R.string.rp)) },
@@ -158,6 +162,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                         onClick = {
                             tags = tag
                             tagsExpanded = false
+                            ExpenseList.tempExpense = Expense(title, value.toIntOrNull() ?: 0, tags, date)
                         }
                     )
                 }
@@ -184,6 +189,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                             dateState.selectedDateMillis?.let { millis ->
                                 val cal = Calendar.getInstance().apply { timeInMillis = millis }
                                 date = "${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.YEAR)}"
+                                ExpenseList.tempExpense = Expense(title, value.toIntOrNull() ?: 0, tags, date)
                             }
                             dateExpanded = false
                         }) {
@@ -207,6 +213,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                 dateError = date.isBlank()
 
                 if (!titleError && !valueError && !tagsError && !dateError) {
+                    ExpenseList.addToExpenseLis(Expense(title, value.toInt(), tags, date))
                     navController.popBackStack()
                 }
             },

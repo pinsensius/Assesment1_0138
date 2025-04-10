@@ -34,8 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
+import com.boido0138.asesment1_0138.model.ExpenseList
+import com.boido0138.asesment1_0138.model.IncomeList
 import com.boido0138.asesment1_0138.navigation.Screen
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+import java.text.NumberFormat
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -102,18 +106,20 @@ fun HomeScreen(navController: NavController) {
 
 @Composable
 fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController) {
+    val totalExpense = ExpenseList.sumExpense()
+    val totalIncome = IncomeList.sumIncome()
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
     ) {
         Text(
-            text = stringResource(id = R.string.expense_total, "Rp. 100000"),
+            text = stringResource(id = R.string.expense_total, formatSumValues(totalExpense)),
             style = MaterialTheme.typography.headlineSmall
         )
 
         Text(
-            text = stringResource(id = R.string.income_total, "Rp. 2500000"),
+            text = stringResource(id = R.string.income_total, formatSumValues(totalIncome)),
             style = MaterialTheme.typography.headlineSmall
         )
 
@@ -147,6 +153,10 @@ fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController
     }
 }
 
+fun formatSumValues(total : Int) : String{
+    val jenisUang = NumberFormat.getCurrencyInstance(Locale.getDefault())
+    return jenisUang.format(total)
+}
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
