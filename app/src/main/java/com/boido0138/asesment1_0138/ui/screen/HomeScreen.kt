@@ -1,5 +1,7 @@
 package com.boido0138.asesment1_0138.ui.screen
 
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -110,6 +113,9 @@ fun HomeScreen(navController: NavController) {
 fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController) {
     val totalExpense = ExpenseList.sumExpense()
     val totalIncome = IncomeList.sumIncome()
+
+    val context = LocalContext.current
+
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -152,12 +158,43 @@ fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController
                 style = MaterialTheme.typography.bodyLarge
             )
         }
+
+        Button(
+            onClick = {
+                shareKeuangan(
+                    context = context,
+                    message = context.getString(R.string.share_template, formatSumValues(totalExpense),formatSumValues(totalIncome))
+                )
+            },
+            modifier =  Modifier
+                .padding(top = 12.dp)
+                .fillMaxWidth(0.8f)
+                .height(50.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.share),
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
     }
 }
 
 fun formatSumValues(total : Int) : String{
     val jenisUang = NumberFormat.getCurrencyInstance(Locale.getDefault())
     return jenisUang.format(total)
+}
+
+private fun shareKeuangan(context: Context, message: String){
+    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_TEXT, message)
+    }
+
+    val chooser = Intent.createChooser(shareIntent, context.getString(R.string.share_title))
+
+    if(shareIntent.resolveActivity(context.packageManager) != null){
+        context.startActivity(chooser)
+    }
 }
 
 @Preview(showBackground = true)

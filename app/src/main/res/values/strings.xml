@@ -24,4 +24,9 @@
     <string name="empty_expense">No Expense Data</string>
     <string name="tags_data">Tags : %1$s</string>
     <string name="date_data">Date : %1$s</string>
+    <string name="share">Share</string>
+    <string name="share_template">Expense : %1$s\nIncome : %2$s</string>
+    <string name="share_title">Share data with...</string>
+
+
 </resources>
