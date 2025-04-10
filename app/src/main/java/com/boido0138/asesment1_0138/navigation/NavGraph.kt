@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.boido0138.asesment1_0138.ui.screen.AddExpenseScreen
+import com.boido0138.asesment1_0138.ui.screen.AddIncomeScreen
 import com.boido0138.asesment1_0138.ui.screen.HomeScreen
 
 @Composable
@@ -15,6 +17,14 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()){
     ) {
         composable(Screen.Home.route){
             HomeScreen(navController)
+        }
+
+        composable(Screen.AddExpense.route){
+            AddExpenseScreen(navController)
+        }
+
+        composable(Screen.AddIncome.route){
+            AddIncomeScreen(navController)
         }
     }
 }

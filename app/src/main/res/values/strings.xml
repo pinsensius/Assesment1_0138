@@ -6,4 +6,18 @@
     <string name="expense_list">Expense List</string>
     <string name="add_income">Add Income</string>
     <string name="add_expense">Add Expense</string>
+    <string name="money_label">Money</string>
+    <string name="title_label">Title</string>
+    <string name="tags_label">Tags</string>
+    <string name="date_label">Date</string>
+    <string name="rp">$</string>
+    <string name="primary">Primary</string>
+    <string name="secondary">Secondary</string>
+    <string name="tertiary">Tertiary</string>
+    <string name="confirm">Confirmation</string>
+    <string name="form_intro">Please enter the input data you wish to include in the history, in the column below.</string>
+    <string name="title_error">Please input the proper data!</string>
+    <string name="values_error">Please input the valid amount!</string>
+    <string name="date_error">Please pick the date!</string>
+    <string name="tags_error">Please pick the tag!</string>
 </resources>

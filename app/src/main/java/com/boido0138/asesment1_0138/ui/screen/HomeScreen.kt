@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
+import com.boido0138.asesment1_0138.navigation.Screen
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -93,13 +94,14 @@ fun HomeScreen(navController: NavController) {
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(24.dp)
-                .fillMaxSize()
+                .fillMaxSize(),
+            navController = navController
         )
     }
 }
 
 @Composable
-fun HomeScreenContent(modifier: Modifier = Modifier) {
+fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController) {
     Column(
         verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -117,6 +119,7 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
+                navController.navigate(Screen.AddExpense.route)
             },
             modifier = Modifier
                 .fillMaxWidth(0.8f)
@@ -130,6 +133,7 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
 
         Button(
             onClick = {
+                navController.navigate(Screen.AddIncome.route)
             },
             modifier = Modifier
                 .fillMaxWidth(0.8f)
