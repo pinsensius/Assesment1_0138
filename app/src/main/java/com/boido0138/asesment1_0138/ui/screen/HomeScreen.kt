@@ -76,15 +76,17 @@ fun HomeScreen(navController: NavController) {
                             onDismissRequest = { menuExpanded = false }
                         ) {
                             DropdownMenuItem(
-                                text = { Text("Income List") },
+                                text = { Text(stringResource(id = R.string.income_list)) },
                                 onClick = {
+                                    navController.navigate(Screen.IncomeList.route)
                                     menuExpanded = false
                                 }
                             )
 
                             DropdownMenuItem(
-                                text = { Text("Expense List") },
+                                text = { Text(stringResource(id = R.string.expense_list)) },
                                 onClick = {
+                                    navController.navigate(Screen.ExpenseList.route)
                                     menuExpanded = false
                                 }
                             )

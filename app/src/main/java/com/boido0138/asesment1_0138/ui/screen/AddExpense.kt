@@ -214,6 +214,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
 
                 if (!titleError && !valueError && !tagsError && !dateError) {
                     ExpenseList.addToExpenseLis(Expense(title, value.toInt(), tags, date))
+                    ExpenseList.tempExpense = Expense("", 0, "Tags" ,"Date")
                     navController.popBackStack()
                 }
             },
