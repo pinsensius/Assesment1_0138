@@ -31,12 +31,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     var menuExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -147,6 +149,6 @@ fun HomeScreenContent(modifier: Modifier = Modifier) {
 @Composable
 fun HomeScreenPreview(){
     Asesment1_0138Theme {
-        HomeScreen()
+        HomeScreen(rememberNavController())
     }
 }
