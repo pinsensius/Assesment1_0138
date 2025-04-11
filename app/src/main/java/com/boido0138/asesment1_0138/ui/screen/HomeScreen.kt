@@ -37,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -61,12 +62,12 @@ fun HomeScreen(navController: NavController) {
                 title = {
                     Text(
                         text = stringResource(id = R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
                     )
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.surfaceTint,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 ),
                 actions = {
                     Box {
@@ -76,7 +77,7 @@ fun HomeScreen(navController: NavController) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.List,
                                 contentDescription = "List",
-                                tint = MaterialTheme.colorScheme.primary
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
                             )
                         }
 
@@ -155,6 +156,7 @@ fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController
             text = stringResource(id = R.string.money_total, formatSumValues(totalMoney)),
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Center,
+            fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(top = 12.dp, bottom = 32.dp)
 
         )
