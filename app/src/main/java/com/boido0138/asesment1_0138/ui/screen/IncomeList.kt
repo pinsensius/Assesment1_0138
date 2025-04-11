@@ -58,7 +58,7 @@ fun IncomeListScreen(navController: NavController) {
                     Text(text = stringResource(id = R.string.income_list))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceTint,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )

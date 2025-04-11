@@ -57,7 +57,7 @@ fun ExpenseListScreen(navController: NavController) {
                     Text(text = stringResource(id = R.string.expense_list))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceTint,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             )
