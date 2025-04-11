@@ -75,6 +75,9 @@ fun AddIncomeScreen(navController: NavController){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavController) {
+    val dateLabel = stringResource(id = R.string.date_label)
+    IncomeList.tempIncome = Income("", 0, dateLabel)
+
     var value by rememberSaveable { mutableStateOf(IncomeList.tempIncome.values.toString()) }
     var valueError by rememberSaveable { mutableStateOf(false) }
 
@@ -185,11 +188,11 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             onClick = {
                 titleError = title.isBlank()
                 valueError = value.isBlank() || value.toIntOrNull() == null || value.toInt() == 0
-                dateError = date.isBlank() || date == "Date"
+                dateError = date.isBlank() || date == dateLabel
 
                 if (!titleError && !valueError && !dateError) {
                     IncomeList.addToIncomeList(Income(title, value.toInt(), date))
-                    IncomeList.tempIncome = Income("", 0,"Date")
+                    IncomeList.tempIncome = Income("", 0,dateLabel)
                     navController.popBackStack()
                 }
             },

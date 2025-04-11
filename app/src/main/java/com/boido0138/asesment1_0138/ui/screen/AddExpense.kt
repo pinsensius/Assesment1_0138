@@ -69,13 +69,18 @@ fun AddExpenseScreen(navController: NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavController) {
+    val dateLabel = stringResource(id = R.string.date_label)
+    val tagsLabel = stringResource(id = R.string.tags_label)
+
+    ExpenseList.tempExpense = Expense("", 0, tagsLabel ,dateLabel)
+
     var value by rememberSaveable { mutableStateOf(ExpenseList.tempExpense.values.toString()) }
     var valueError by rememberSaveable { mutableStateOf(false) }
 
     var title by rememberSaveable { mutableStateOf((ExpenseList.tempExpense.title)) }
     var titleError by rememberSaveable { mutableStateOf(false) }
 
-    var tags by rememberSaveable { mutableStateOf((ExpenseList.tempExpense.tags)) }
+    var tags by rememberSaveable { mutableStateOf((tagsLabel)) }
     var tagsError by rememberSaveable { mutableStateOf(false) }
     var tagsExpanded by rememberSaveable { mutableStateOf(false) }
     val tagsList = listOf(
@@ -84,10 +89,11 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
         stringResource(R.string.tertiary)
     )
 
-    var date by rememberSaveable { mutableStateOf((ExpenseList.tempExpense.date)) }
+    var date by rememberSaveable { mutableStateOf((dateLabel)) }
     var dateError by rememberSaveable { mutableStateOf(false) }
     var dateExpanded by rememberSaveable { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
+
 
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
@@ -223,12 +229,12 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
             onClick = {
                 titleError = title.isBlank()
                 valueError = value.isBlank() || value.toIntOrNull() == null || value.toInt() == 0
-                tagsError = tags.isBlank() || tags == "Tags"
-                dateError = date.isBlank() || date == "Date"
+                tagsError = tags.isBlank() || tags == tagsLabel
+                dateError = date.isBlank() || date == dateLabel
 
                 if (!titleError && !valueError && !tagsError && !dateError) {
                     ExpenseList.addToExpenseLis(Expense(title, value.toInt(), tags, date))
-                    ExpenseList.tempExpense = Expense("", 0, "Tags" ,"Date")
+                    ExpenseList.tempExpense = Expense("", 0, tagsLabel ,dateLabel)
                     navController.popBackStack()
                 }
             },
