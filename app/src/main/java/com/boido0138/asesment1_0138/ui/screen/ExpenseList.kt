@@ -29,13 +29,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Expense
 import com.boido0138.asesment1_0138.model.ExpenseList
+import com.boido0138.asesment1_0138.model.ExpenseViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -74,9 +78,10 @@ fun ExpenseListScreen(navController: NavController) {
 
 @Composable
 fun ExpenseListScreenContent(modifier: Modifier = Modifier) {
-    val expenseData = ExpenseList.expenseList
+    val viewModel : ExpenseViewModel = viewModel()
+    val data = viewModel.data
 
-    if (expenseData.isEmpty()) {
+    if (data.isEmpty()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -97,9 +102,9 @@ fun ExpenseListScreenContent(modifier: Modifier = Modifier) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = modifier
+            modifier = modifier,
         ) {
-            items(expenseData) {
+            items(data) {
                 DataCard(expense = it)
             }
         }
@@ -123,12 +128,17 @@ fun DataCard(expense: Expense) {
             Text(
                 text = expense.title,
                 style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
             )
 
             Text(
                 text = formatValues(expense.values),
                 style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
@@ -138,11 +148,15 @@ fun DataCard(expense: Expense) {
             ) {
                 Text(
                     text = stringResource(id = R.string.tags_data, expense.tags),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall
                 )
 
                 Text(
                     text = stringResource(id = R.string.date_data, expense.date),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     style = MaterialTheme.typography.bodySmall
                 )
             }

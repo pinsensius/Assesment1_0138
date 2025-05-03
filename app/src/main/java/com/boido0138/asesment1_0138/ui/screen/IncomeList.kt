@@ -28,13 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Income
 import com.boido0138.asesment1_0138.model.IncomeList
+import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import java.text.NumberFormat
 import java.util.Locale
@@ -75,9 +79,10 @@ fun IncomeListScreen(navController: NavController) {
 
 @Composable
 fun IncomeListScreenContent(modifier: Modifier = Modifier) {
-    val incomeData = IncomeList.incomeList
+    val viewModel : IncomeViewModel = viewModel()
+    val data = viewModel.data
 
-    if (incomeData.isEmpty()) {
+    if (data.isEmpty()) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -102,7 +107,7 @@ fun IncomeListScreenContent(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
         ) {
-            items(incomeData) {
+            items(data) {
                 DataCard(income = it)
             }
         }
@@ -126,17 +131,24 @@ fun DataCard(income: Income) {
             Text(
                 text = income.title,
                 style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary
             )
 
             Text(
                 text = formatValues(income.values),
                 style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             Text(
                 text = stringResource(id = R.string.date_data, income.date),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.bodySmall
             )
         }
