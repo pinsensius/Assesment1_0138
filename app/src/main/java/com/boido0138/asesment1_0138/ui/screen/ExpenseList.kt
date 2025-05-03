@@ -1,7 +1,9 @@
 package com.boido0138.asesment1_0138.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +41,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Expense
-import com.boido0138.asesment1_0138.model.ExpenseList
 import com.boido0138.asesment1_0138.model.ExpenseViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 
@@ -80,6 +82,7 @@ fun ExpenseListScreen(navController: NavController) {
 fun ExpenseListScreenContent(modifier: Modifier = Modifier) {
     val viewModel : ExpenseViewModel = viewModel()
     val data = viewModel.data
+    val context = LocalContext.current
 
     if (data.isEmpty()) {
         Column(
@@ -105,17 +108,25 @@ fun ExpenseListScreenContent(modifier: Modifier = Modifier) {
             modifier = modifier,
         ) {
             items(data) {
-                DataCard(expense = it)
+                DataCard(
+                    expense = it
+                ){
+                    val message = context.getString(R.string.clicked_card, it.title)
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 }
 
 @Composable
-fun DataCard(expense: Expense) {
+fun DataCard(expense: Expense, onClick : () -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

@@ -1,7 +1,9 @@
 package com.boido0138.asesment1_0138.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +40,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Income
-import com.boido0138.asesment1_0138.model.IncomeList
 import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import java.text.NumberFormat
@@ -81,6 +83,7 @@ fun IncomeListScreen(navController: NavController) {
 fun IncomeListScreenContent(modifier: Modifier = Modifier) {
     val viewModel : IncomeViewModel = viewModel()
     val data = viewModel.data
+    val context = LocalContext.current
 
     if (data.isEmpty()) {
         Column(
@@ -108,17 +111,25 @@ fun IncomeListScreenContent(modifier: Modifier = Modifier) {
             modifier = modifier
         ) {
             items(data) {
-                DataCard(income = it)
+                DataCard(
+                    income = it
+                ){
+                    val message = context.getString(R.string.clicked_card, it.title)
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 }
 
 @Composable
-fun DataCard(income: Income) {
+fun DataCard(income: Income, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            },
         shape = MaterialTheme.shapes.medium,
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {

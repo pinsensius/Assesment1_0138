@@ -28,4 +28,5 @@
     <string name="date_data">Date: %1$s</string>
     <string name="share_template">Expenses: %1$s\nIncome: %2$s\n\nMoney Now: %3$s</string>
     <string name="share_title">Share your data via…</string>
+    <string name="clicked_card">%1$s is Clicked!</string>
 </resources>
