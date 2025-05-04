@@ -4,16 +4,40 @@ import android.content.Context
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.DateRange
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -32,8 +56,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
-import com.boido0138.asesment1_0138.model.Income
-import com.boido0138.asesment1_0138.model.IncomeList
 import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import com.boido0138.asesment1_0138.util.ViewModelFactory
@@ -159,7 +181,6 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             value = title,
             onValueChange = {
                 title = it
-                IncomeList.tempIncome = Income(1, title, value.toIntOrNull() ?: 0, date)
             },
             label = { Text(stringResource(id = R.string.title_label)) },
             keyboardOptions = KeyboardOptions.Default.copy(
@@ -179,7 +200,6 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             value = value,
             onValueChange = {
                 value = it
-                IncomeList.tempIncome = Income(1,title, value.toIntOrNull() ?: 0, date)
             },
             label = { Text(stringResource(id = R.string.money_label)) },
             leadingIcon = { Text(stringResource(id = R.string.rp)) },
@@ -210,7 +230,6 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
                             dateState.selectedDateMillis?.let { millis ->
                                 val cal = Calendar.getInstance().apply { timeInMillis = millis }
                                 date = "${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.YEAR)}"
-                                IncomeList.tempIncome = Income(1,title, value.toIntOrNull() ?: 0, date)
                             }
                             dateButtonExpanded = false
                         }) {

@@ -16,6 +16,12 @@ class IncomeViewModel(private val dao: IncomeDao) : ViewModel() {
         initialValue = emptyList()
     )
 
+    val totalSum : StateFlow<Int> = dao.getIncomeSum().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = 0
+    )
+
     suspend fun getIncome(id : Long): Income?{
         return dao.getIncomeById(id)
     }

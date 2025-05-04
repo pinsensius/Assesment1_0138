@@ -24,4 +24,7 @@ interface ExpenseDao {
 
     @Query("DELETE FROM expense WHERE id = :id")
     suspend fun deleteById(id: Long)
+
+    @Query("SELECT SUM(`values`) FROM expense")
+    fun getExpenseSum(): Flow<Int>
 }

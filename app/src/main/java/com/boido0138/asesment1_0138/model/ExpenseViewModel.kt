@@ -16,6 +16,12 @@ class ExpenseViewModel(private val dao: ExpenseDao): ViewModel() {
         initialValue = emptyList()
     )
 
+    val totalSum : StateFlow<Int> = dao.getExpenseSum().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = 0
+    )
+
     suspend fun getExpense(id : Long): Expense?{
         return dao.getExpenseById(id)
     }

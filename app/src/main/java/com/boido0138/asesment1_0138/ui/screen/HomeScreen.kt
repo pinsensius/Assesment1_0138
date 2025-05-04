@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,19 +42,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
-import com.boido0138.asesment1_0138.model.ExpenseList
-import com.boido0138.asesment1_0138.model.IncomeList
+import com.boido0138.asesment1_0138.model.ExpenseViewModel
+import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.navigation.Screen
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+import com.boido0138.asesment1_0138.util.ViewModelFactory
 import java.text.NumberFormat
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController) {
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val expenseViewModel : ExpenseViewModel = viewModel(factory = factory)
+    val incomeViewModel : IncomeViewModel = viewModel(factory = factory)
     var menuExpanded by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -111,19 +118,21 @@ fun HomeScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(24.dp)
                 .fillMaxSize(),
-            navController = navController
+            navController = navController,
+            context = context,
+            expenseViewModel = expenseViewModel,
+            incomeViewModel = incomeViewModel
         )
     }
 }
 
 @Composable
-fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController) {
-    val totalExpense = ExpenseList.sumExpense()
-    val totalIncome = IncomeList.sumIncome()
+fun HomeScreenContent(modifier: Modifier = Modifier,navController: NavController, context : Context, expenseViewModel: ExpenseViewModel, incomeViewModel: IncomeViewModel) {
+    val totalExpense by expenseViewModel.totalSum.collectAsState()
+    val totalIncome by incomeViewModel.totalSum.collectAsState()
 
     val totalMoney = totalIncome - totalExpense
 
-    val context = LocalContext.current
 
     Column(
         verticalArrangement = Arrangement.Center,
