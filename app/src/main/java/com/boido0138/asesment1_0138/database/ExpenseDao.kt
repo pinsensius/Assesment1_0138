@@ -19,4 +19,7 @@ interface ExpenseDao {
     @Query("SELECT * FROM expense ORDER BY id DESC")
     fun getExpense(): Flow<List<Expense>>
 
+    @Query("SELECT * FROM expense WHERE id = :id")
+    suspend fun getExpenseById(id: Long): Expense?
+
 }

@@ -19,4 +19,7 @@ interface IncomeDao {
     @Query("SELECT * FROM income ORDER BY id DESC")
     fun getIncome(): Flow<List<Income>>
 
+    @Query("SELECT * FROM income WHERE id = :id")
+    suspend fun getIncomeById(id: Long): Income?
+
 }

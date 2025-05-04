@@ -16,8 +16,8 @@ class IncomeViewModel(private val dao: IncomeDao) : ViewModel() {
         initialValue = emptyList()
     )
 
-    fun getIncome(id : Long): Income?{
-        return null
+    suspend fun getIncome(id : Long): Income?{
+        return dao.getIncomeById(id)
     }
 
     fun insert(title : String, values : Int, date : String){
@@ -29,6 +29,19 @@ class IncomeViewModel(private val dao: IncomeDao) : ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             dao.insert(income)
+        }
+    }
+
+    fun update(id : Long, title : String, values : Int, date : String){
+        val income = Income(
+            id = id,
+            title = title,
+            values = values,
+            date = date
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.update(income)
         }
     }
 }

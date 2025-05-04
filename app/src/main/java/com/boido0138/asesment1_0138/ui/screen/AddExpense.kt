@@ -269,8 +269,10 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
 
                 if(id == null){
                     viewModel.insert(title,value.toInt(),tags, date)
-                    navController.popBackStack()
+                }else{
+                    viewModel.update(id,title, value.toInt(),tags,date)
                 }
+                navController.popBackStack()
             },
             modifier = Modifier.fillMaxWidth()
         ) {

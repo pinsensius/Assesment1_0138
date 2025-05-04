@@ -16,8 +16,8 @@ class ExpenseViewModel(private val dao: ExpenseDao): ViewModel() {
         initialValue = emptyList()
     )
 
-    fun getExpense(id : Long): Expense?{
-        return null
+    suspend fun getExpense(id : Long): Expense?{
+        return dao.getExpenseById(id)
     }
 
     fun insert(title : String, values : Int, tags : String, date : String){
@@ -30,6 +30,20 @@ class ExpenseViewModel(private val dao: ExpenseDao): ViewModel() {
 
         viewModelScope.launch(Dispatchers.IO) {
             dao.insert(expense)
+        }
+    }
+
+    fun update(id : Long, title : String, values : Int, tags : String, date : String){
+        val expense = Expense(
+            id = id,
+            title = title,
+            values = values,
+            tags = tags,
+            date = date
+        )
+
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.update(expense)
         }
     }
 }

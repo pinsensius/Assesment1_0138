@@ -226,8 +226,11 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
 
                 if(id == null){
                     viewModel.insert(title, value.toInt(),date)
-                    navController.popBackStack()
+                }else{
+                    viewModel.update(id,title, value.toInt(),date)
                 }
+
+                navController.popBackStack()
             },
             modifier = Modifier.fillMaxWidth()
         ) {
