@@ -1,21 +1,20 @@
 package com.boido0138.asesment1_0138.model
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.boido0138.asesment1_0138.database.IncomeDao
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 
-class IncomeViewModel : ViewModel() {
-    val data = listOf(
-        Income(
-            id = 1, title = "deseruisse", values = 7299, date = "intellegebat"
-        ),
-        Income(
-            id = 2, title = "vehicula", values = 6674, date = "elitr"
-        ),
-        Income(
-            id = 3, title = "veri", values = 4315, date = "odio"
-        )
+class IncomeViewModel(dao: IncomeDao) : ViewModel() {
+    val data : StateFlow<List<Income>> = dao.getIncome().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = emptyList()
     )
 
     fun getIncome(id : Long): Income?{
-        return data.find { it.id == id }
+        return data.value.find { it.id == id }
     }
 }

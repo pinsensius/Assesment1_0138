@@ -1,21 +1,20 @@
 package com.boido0138.asesment1_0138.model
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.boido0138.asesment1_0138.database.ExpenseDao
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 
-class ExpenseViewModel : ViewModel() {
-    val data = listOf(
-        Expense(
-            id = 1,"Burger", values = 1121, tags = "dicant", date = "vitae"
-        ),
-        Expense(
-            id = 2, title = "ad", values = 100, tags = "afs", date = "10/10/10"
-        ),
-        Expense(
-            id = 3, title = "dui", values = 7500, tags = "himenaeos", date = "hendrerit"
-        )
+class ExpenseViewModel(dao: ExpenseDao): ViewModel() {
+    val data : StateFlow<List<Expense>> = dao.getExpense().stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = emptyList()
     )
 
     fun getExpense(id : Long): Expense?{
-        return data.find { it.id == id }
+        return data.value.find { it.id == id }
     }
 }

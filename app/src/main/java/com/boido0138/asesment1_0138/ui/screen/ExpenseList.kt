@@ -25,9 +25,12 @@ package com.boido0138.asesment1_0138.ui.screen
         import androidx.compose.material3.TopAppBar
         import androidx.compose.material3.TopAppBarDefaults
         import androidx.compose.runtime.Composable
+        import androidx.compose.runtime.collectAsState
+        import androidx.compose.runtime.getValue
         import androidx.compose.ui.Alignment
         import androidx.compose.ui.Modifier
         import androidx.compose.ui.layout.ContentScale
+        import androidx.compose.ui.platform.LocalContext
         import androidx.compose.ui.res.painterResource
         import androidx.compose.ui.res.stringResource
         import androidx.compose.ui.text.font.FontWeight
@@ -42,6 +45,7 @@ package com.boido0138.asesment1_0138.ui.screen
         import com.boido0138.asesment1_0138.model.ExpenseViewModel
         import com.boido0138.asesment1_0138.navigation.Screen
         import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+        import com.boido0138.asesment1_0138.util.ViewModelFactory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -80,8 +84,10 @@ fun ExpenseListScreen(navController: NavHostController) {
 
 @Composable
 fun ExpenseListScreenContent(modifier: Modifier = Modifier, navController: NavHostController) {
-    val viewModel : ExpenseViewModel = viewModel()
-    val data = viewModel.data
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel : ExpenseViewModel = viewModel(factory = factory)
+    val data by viewModel.data.collectAsState()
 
     if (data.isEmpty()) {
         Column(
