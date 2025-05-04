@@ -1,7 +1,6 @@
 package com.boido0138.asesment1_0138.ui.screen
 
 import android.content.res.Configuration
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,7 +27,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -36,18 +34,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Income
 import com.boido0138.asesment1_0138.model.IncomeViewModel
+import com.boido0138.asesment1_0138.navigation.Screen
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import java.text.NumberFormat
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IncomeListScreen(navController: NavController) {
+fun IncomeListScreen(navController: NavHostController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,15 +74,15 @@ fun IncomeListScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
                 .fillMaxSize()
+            , navController = navController
         )
     }
 }
 
 @Composable
-fun IncomeListScreenContent(modifier: Modifier = Modifier) {
+fun IncomeListScreenContent(modifier: Modifier = Modifier, navController: NavHostController) {
     val viewModel : IncomeViewModel = viewModel()
     val data = viewModel.data
-    val context = LocalContext.current
 
     if (data.isEmpty()) {
         Column(
@@ -114,8 +113,7 @@ fun IncomeListScreenContent(modifier: Modifier = Modifier) {
                 DataCard(
                     income = it
                 ){
-                    val message = context.getString(R.string.clicked_card, it.title)
-                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    navController.navigate(Screen.EditIncome.withId(it.id))
                 }
             }
         }

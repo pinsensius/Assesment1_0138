@@ -19,21 +19,25 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Income
 import com.boido0138.asesment1_0138.model.IncomeList
+import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import java.util.Calendar
 
+const val KEY_ID_INCOME = "idIncome"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddIncomeScreen(navController: NavController){
+fun AddIncomeScreen(navController: NavController, id : Long? = null){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,9 +55,15 @@ fun AddIncomeScreen(navController: NavController){
                     }
                 },
                 title = {
-                    Text(
-                        text = stringResource(id = R.string.app_name)
-                    )
+                    if(id == null){
+                        Text(
+                            text = stringResource(id = R.string.add_income)
+                        )
+                    }else{
+                        Text(
+                            text = stringResource(id = R.string.edit_income)
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -67,16 +77,19 @@ fun AddIncomeScreen(navController: NavController){
                 .padding(innerPadding)
                 .padding(16.dp)
                 .fillMaxSize(),
-            navController
+            navController,
+            id
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavController) {
+fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null) {
+    val viewModel : IncomeViewModel = viewModel()
+
     val dateLabel = stringResource(id = R.string.date_label)
-    IncomeList.tempIncome = Income("", 0, dateLabel)
+    IncomeList.tempIncome = Income(1, "", 0, dateLabel)
 
     var value by rememberSaveable { mutableStateOf(IncomeList.tempIncome.values.toString()) }
     var valueError by rememberSaveable { mutableStateOf(false) }
@@ -88,6 +101,14 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
     var dateError by rememberSaveable { mutableStateOf(false) }
     var dateButtonExpanded by rememberSaveable { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
+
+    LaunchedEffect(Unit) {
+        if(id == null) return@LaunchedEffect
+        val data = viewModel.getIncome(id) ?: return@LaunchedEffect
+        title = data.title
+        value = data.values.toString()
+        date = data.date
+    }
 
     Column(
         modifier = modifier.verticalScroll(rememberScrollState()),
@@ -120,10 +141,13 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             value = title,
             onValueChange = {
                 title = it
-                IncomeList.tempIncome = Income(title, value.toIntOrNull() ?: 0, date)
+                IncomeList.tempIncome = Income(1, title, value.toIntOrNull() ?: 0, date)
             },
             label = { Text(stringResource(id = R.string.title_label)) },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+                , capitalization = KeyboardCapitalization.Words
+            ),
             trailingIcon = { IconSelector(titleError) },
             singleLine = true,
             isError = titleError,
@@ -137,7 +161,7 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
             value = value,
             onValueChange = {
                 value = it
-                IncomeList.tempIncome = Income(title, value.toIntOrNull() ?: 0, date)
+                IncomeList.tempIncome = Income(1,title, value.toIntOrNull() ?: 0, date)
             },
             label = { Text(stringResource(id = R.string.money_label)) },
             leadingIcon = { Text(stringResource(id = R.string.rp)) },
@@ -168,7 +192,7 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
                             dateState.selectedDateMillis?.let { millis ->
                                 val cal = Calendar.getInstance().apply { timeInMillis = millis }
                                 date = "${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.YEAR)}"
-                                IncomeList.tempIncome = Income(title, value.toIntOrNull() ?: 0, date)
+                                IncomeList.tempIncome = Income(1,title, value.toIntOrNull() ?: 0, date)
                             }
                             dateButtonExpanded = false
                         }) {
@@ -191,8 +215,8 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
                 dateError = date.isBlank() || date == dateLabel
 
                 if (!titleError && !valueError && !dateError) {
-                    IncomeList.addToIncomeList(Income(title, value.toInt(), date))
-                    IncomeList.tempIncome = Income("", 0,dateLabel)
+                    IncomeList.addToIncomeList(Income(1,title, value.toInt(), date))
+                    IncomeList.tempIncome = Income(1, "", 0,dateLabel)
                     navController.popBackStack()
                 }
             },

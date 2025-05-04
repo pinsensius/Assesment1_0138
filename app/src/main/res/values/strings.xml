@@ -29,4 +29,6 @@
     <string name="share_template">Expenses: %1$s\nIncome: %2$s\n\nMoney Now: %3$s</string>
     <string name="share_title">Share your data via…</string>
     <string name="clicked_card">%1$s is Clicked!</string>
+    <string name="edit_expense">Edit Expense</string>
+    <string name="edit_income">Edit Income</string>
 </resources>

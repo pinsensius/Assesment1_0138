@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModel
 class ExpenseViewModel : ViewModel() {
     val data = listOf(
         Expense(
-            "Burger", values = 1121, tags = "dicant", date = "vitae"
+            id = 1,"Burger", values = 1121, tags = "dicant", date = "vitae"
         ),
         Expense(
-            title = "ad", values = 100, tags = "afs", date = "10/10/10"
+            id = 2, title = "ad", values = 100, tags = "afs", date = "10/10/10"
         ),
         Expense(
-            title = "dui", values = 7500, tags = "himenaeos", date = "hendrerit"
+            id = 3, title = "dui", values = 7500, tags = "himenaeos", date = "hendrerit"
         )
     )
+
+    fun getExpense(id : Long): Expense?{
+        return data.find { it.id == id }
+    }
 }

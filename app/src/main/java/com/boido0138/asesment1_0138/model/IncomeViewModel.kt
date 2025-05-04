@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModel
 class IncomeViewModel : ViewModel() {
     val data = listOf(
         Income(
-            title = "deseruisse", values = 7299, date = "intellegebat"
+            id = 1, title = "deseruisse", values = 7299, date = "intellegebat"
         ),
         Income(
-            title = "vehicula", values = 6674, date = "elitr"
+            id = 2, title = "vehicula", values = 6674, date = "elitr"
         ),
         Income(
-            title = "veri", values = 4315, date = "odio"
+            id = 3, title = "veri", values = 4315, date = "odio"
         )
     )
+
+    fun getIncome(id : Long): Income?{
+        return data.find { it.id == id }
+    }
 }

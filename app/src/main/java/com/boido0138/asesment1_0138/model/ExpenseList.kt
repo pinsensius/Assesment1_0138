@@ -5,7 +5,7 @@ object ExpenseList {
 
     val expenseList : List<Expense> get() = _expenseList
 
-    var tempExpense : Expense = Expense("", 0, "Tags" ,"Date")
+    var tempExpense : Expense = Expense(1,"", 0, "Tags" ,"Date")
 
     fun addToExpenseLis(expense: Expense){
         _expenseList.add(expense)

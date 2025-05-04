@@ -5,7 +5,7 @@ object IncomeList {
 
     val incomeList : List<Income> get() = _incomeList
 
-    var tempIncome : Income = Income("", 0,"Date")
+    var tempIncome : Income = Income(1,"", 0,"Date")
 
     fun addToIncomeList(income: Income){
         _incomeList.add(income)

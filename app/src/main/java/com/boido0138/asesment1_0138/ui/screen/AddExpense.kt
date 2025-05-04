@@ -21,21 +21,26 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Expense
 import com.boido0138.asesment1_0138.model.ExpenseList
+import com.boido0138.asesment1_0138.model.ExpenseViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import java.util.*
 
+const val KEY_ID_EXPENSE = "idExpense"
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseScreen(navController: NavController) {
+fun AddExpenseScreen(navController: NavController, id : Long? = null) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -48,7 +53,17 @@ fun AddExpenseScreen(navController: NavController) {
                         )
                     }
                 },
-                title = { Text(text = stringResource(id = R.string.app_name)) },
+                title = {
+                    if(id == null){
+                        Text(
+                            text = stringResource(id = R.string.add_expense)
+                        )
+                    }else{
+                        Text(
+                            text = stringResource(id = R.string.edit_expense)
+                        )
+                    }
+                },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -61,18 +76,20 @@ fun AddExpenseScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
                 .fillMaxSize(),
-            navController = navController
+            navController = navController,
+            id = id
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavController) {
+fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null) {
+    val viewModel : ExpenseViewModel = viewModel()
     val dateLabel = stringResource(id = R.string.date_label)
     val tagsLabel = stringResource(id = R.string.tags_label)
 
-    ExpenseList.tempExpense = Expense("", 0, tagsLabel ,dateLabel)
+    ExpenseList.tempExpense = Expense(1, "", 0, tagsLabel ,dateLabel)
 
     var value by rememberSaveable { mutableStateOf(ExpenseList.tempExpense.values.toString()) }
     var valueError by rememberSaveable { mutableStateOf(false) }
@@ -93,6 +110,15 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
     var dateError by rememberSaveable { mutableStateOf(false) }
     var dateExpanded by rememberSaveable { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
+
+    LaunchedEffect(Unit) {
+        if(id == null) return@LaunchedEffect
+        val data = viewModel.getExpense(id) ?: return@LaunchedEffect
+        title = data.title
+        value = data.values.toString()
+        tags = data.tags
+        date = data.date
+    }
 
 
     Column(
@@ -128,11 +154,14 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
             value = title,
             onValueChange = {
                 title = it
-                ExpenseList.tempExpense = Expense(title,value.toIntOrNull() ?: 0, tags, date)
+                ExpenseList.tempExpense = Expense(1, title,value.toIntOrNull() ?: 0, tags, date)
             },
             label = { Text(stringResource(R.string.title_label)) },
             trailingIcon = { IconSelector(titleError) },
-            keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next,
+                capitalization = KeyboardCapitalization.Words
+            ),
             isError = titleError,
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
@@ -145,7 +174,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
             value = value,
             onValueChange = {
                 value = it
-                ExpenseList.tempExpense = Expense(title, value.toIntOrNull() ?: 0, tags, date)
+                ExpenseList.tempExpense = Expense(1, title, value.toIntOrNull() ?: 0, tags, date)
             },
             label = { Text(stringResource(R.string.money_label)) },
             leadingIcon = { Text(stringResource(R.string.rp)) },
@@ -182,7 +211,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                         onClick = {
                             tags = tag
                             tagsExpanded = false
-                            ExpenseList.tempExpense = Expense(title, value.toIntOrNull() ?: 0, tags, date)
+                            ExpenseList.tempExpense = Expense(1, title, value.toIntOrNull() ?: 0, tags, date)
                         }
                     )
                 }
@@ -209,7 +238,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                             dateState.selectedDateMillis?.let { millis ->
                                 val cal = Calendar.getInstance().apply { timeInMillis = millis }
                                 date = "${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.YEAR)}"
-                                ExpenseList.tempExpense = Expense(title, value.toIntOrNull() ?: 0, tags, date)
+                                ExpenseList.tempExpense = Expense(1, title, value.toIntOrNull() ?: 0, tags, date)
                             }
                             dateExpanded = false
                         }) {
@@ -233,8 +262,8 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                 dateError = date.isBlank() || date == dateLabel
 
                 if (!titleError && !valueError && !tagsError && !dateError) {
-                    ExpenseList.addToExpenseLis(Expense(title, value.toInt(), tags, date))
-                    ExpenseList.tempExpense = Expense("", 0, tagsLabel ,dateLabel)
+                    ExpenseList.addToExpenseLis(Expense(1, title, value.toInt(), tags, date))
+                    ExpenseList.tempExpense = Expense(1, "", 0, tagsLabel ,dateLabel)
                     navController.popBackStack()
                 }
             },
