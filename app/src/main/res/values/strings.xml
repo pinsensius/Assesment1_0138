@@ -31,4 +31,5 @@
     <string name="clicked_card">%1$s is Clicked!</string>
     <string name="edit_expense">Edit Expense</string>
     <string name="edit_income">Edit Income</string>
+    <string name="invalid">Title, Value, and Tag must not empty!</string>
 </resources>

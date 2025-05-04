@@ -1,6 +1,7 @@
 package com.boido0138.asesment1_0138.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,6 +36,7 @@ import com.boido0138.asesment1_0138.model.Expense
 import com.boido0138.asesment1_0138.model.ExpenseList
 import com.boido0138.asesment1_0138.model.ExpenseViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+import com.boido0138.asesment1_0138.util.ViewModelFactory
 import java.util.*
 
 const val KEY_ID_EXPENSE = "idExpense"
@@ -85,16 +88,18 @@ fun AddExpenseScreen(navController: NavController, id : Long? = null) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null) {
-    val viewModel : ExpenseViewModel = viewModel()
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel : ExpenseViewModel = viewModel(factory = factory)
     val dateLabel = stringResource(id = R.string.date_label)
     val tagsLabel = stringResource(id = R.string.tags_label)
 
     ExpenseList.tempExpense = Expense(1, "", 0, tagsLabel ,dateLabel)
 
-    var value by rememberSaveable { mutableStateOf(ExpenseList.tempExpense.values.toString()) }
+    var value by rememberSaveable { mutableStateOf("") }
     var valueError by rememberSaveable { mutableStateOf(false) }
 
-    var title by rememberSaveable { mutableStateOf((ExpenseList.tempExpense.title)) }
+    var title by rememberSaveable { mutableStateOf("") }
     var titleError by rememberSaveable { mutableStateOf(false) }
 
     var tags by rememberSaveable { mutableStateOf((tagsLabel)) }
@@ -135,7 +140,7 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
         )
 
         Text(
-            text = stringResource(R.string.add_expense),
+            text = if(id == null) stringResource(id = R.string.add_expense) else stringResource(id = R.string.edit_expense),
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center
@@ -154,7 +159,6 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
             value = title,
             onValueChange = {
                 title = it
-                ExpenseList.tempExpense = Expense(1, title,value.toIntOrNull() ?: 0, tags, date)
             },
             label = { Text(stringResource(R.string.title_label)) },
             trailingIcon = { IconSelector(titleError) },
@@ -174,7 +178,6 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
             value = value,
             onValueChange = {
                 value = it
-                ExpenseList.tempExpense = Expense(1, title, value.toIntOrNull() ?: 0, tags, date)
             },
             label = { Text(stringResource(R.string.money_label)) },
             leadingIcon = { Text(stringResource(R.string.rp)) },
@@ -211,7 +214,6 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                         onClick = {
                             tags = tag
                             tagsExpanded = false
-                            ExpenseList.tempExpense = Expense(1, title, value.toIntOrNull() ?: 0, tags, date)
                         }
                     )
                 }
@@ -238,7 +240,6 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
                             dateState.selectedDateMillis?.let { millis ->
                                 val cal = Calendar.getInstance().apply { timeInMillis = millis }
                                 date = "${cal.get(Calendar.DAY_OF_MONTH)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.YEAR)}"
-                                ExpenseList.tempExpense = Expense(1, title, value.toIntOrNull() ?: 0, tags, date)
                             }
                             dateExpanded = false
                         }) {
@@ -257,13 +258,17 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
         Button(
             onClick = {
                 titleError = title.isBlank()
-                valueError = value.isBlank() || value.toIntOrNull() == null || value.toInt() == 0
-                tagsError = tags.isBlank() || tags == tagsLabel
-                dateError = date.isBlank() || date == dateLabel
+                valueError = value.toIntOrNull() == null
+                tagsError = tags == tagsLabel
+                dateError = date == dateLabel
 
-                if (!titleError && !valueError && !tagsError && !dateError) {
-                    ExpenseList.addToExpenseLis(Expense(1, title, value.toInt(), tags, date))
-                    ExpenseList.tempExpense = Expense(1, "", 0, tagsLabel ,dateLabel)
+                if (titleError || valueError || tagsError || dateError) {
+                    Toast.makeText(context, R.string.invalid, Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+                if(id == null){
+                    viewModel.insert(title,value.toInt(),tags, date)
                     navController.popBackStack()
                 }
             },

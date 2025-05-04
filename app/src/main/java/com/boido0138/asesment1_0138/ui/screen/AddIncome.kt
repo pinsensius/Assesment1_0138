@@ -1,6 +1,7 @@
 package com.boido0138.asesment1_0138.ui.screen
 
 import android.content.res.Configuration
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -15,6 +16,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +34,7 @@ import com.boido0138.asesment1_0138.model.Income
 import com.boido0138.asesment1_0138.model.IncomeList
 import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+import com.boido0138.asesment1_0138.util.ViewModelFactory
 import java.util.Calendar
 
 const val KEY_ID_INCOME = "idIncome"
@@ -86,18 +89,19 @@ fun AddIncomeScreen(navController: NavController, id : Long? = null){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null) {
-    val viewModel : IncomeViewModel = viewModel()
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel : IncomeViewModel = viewModel(factory = factory)
 
     val dateLabel = stringResource(id = R.string.date_label)
-    IncomeList.tempIncome = Income(1, "", 0, dateLabel)
 
-    var value by rememberSaveable { mutableStateOf(IncomeList.tempIncome.values.toString()) }
+    var value by rememberSaveable { mutableStateOf("") }
     var valueError by rememberSaveable { mutableStateOf(false) }
 
-    var title by rememberSaveable { mutableStateOf(IncomeList.tempIncome.title) }
+    var title by rememberSaveable { mutableStateOf("") }
     var titleError by rememberSaveable { mutableStateOf(false) }
 
-    var date by rememberSaveable { mutableStateOf(IncomeList.tempIncome.date) }
+    var date by rememberSaveable { mutableStateOf(dateLabel) }
     var dateError by rememberSaveable { mutableStateOf(false) }
     var dateButtonExpanded by rememberSaveable { mutableStateOf(false) }
     val dateState = rememberDatePickerState()
@@ -211,12 +215,17 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
         Button(
             onClick = {
                 titleError = title.isBlank()
-                valueError = value.isBlank() || value.toIntOrNull() == null || value.toInt() == 0
-                dateError = date.isBlank() || date == dateLabel
+                valueError = value.toIntOrNull() == null
+                dateError = date == dateLabel
 
-                if (!titleError && !valueError && !dateError) {
-                    IncomeList.addToIncomeList(Income(1,title, value.toInt(), date))
-                    IncomeList.tempIncome = Income(1, "", 0,dateLabel)
+                if (titleError || valueError || dateError) {
+                    Toast.makeText(context, R.string.invalid, Toast.LENGTH_SHORT).show()
+                    return@Button
+                }
+
+
+                if(id == null){
+                    viewModel.insert(title, value.toInt(),date)
                     navController.popBackStack()
                 }
             },

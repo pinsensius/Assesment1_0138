@@ -31,4 +31,5 @@
     <string name="clicked_card">%1$s diklik!</string>
     <string name="edit_expense">Edit Pengeluaran</string>
     <string name="edit_income">Edit Pemasukan</string>
+    <string name="invalid">Judul, Jumlah, dan Tag tidak boleh kosong!</string>
 </resources>
