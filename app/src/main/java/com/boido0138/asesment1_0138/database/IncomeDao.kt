@@ -22,4 +22,7 @@ interface IncomeDao {
     @Query("SELECT * FROM income WHERE id = :id")
     suspend fun getIncomeById(id: Long): Income?
 
+    @Query("DELETE FROM income WHERE id = :id")
+    suspend fun deleteById(id: Long)
+
 }

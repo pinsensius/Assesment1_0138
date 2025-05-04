@@ -1,20 +1,49 @@
 package com.boido0138.asesment1_0138.ui.screen
 
+import android.content.Context
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.ArrowDropDown
 import androidx.compose.material.icons.outlined.DateRange
 import androidx.compose.material.icons.outlined.Warning
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -30,20 +59,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
-import com.boido0138.asesment1_0138.model.Expense
-import com.boido0138.asesment1_0138.model.ExpenseList
 import com.boido0138.asesment1_0138.model.ExpenseViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
 import com.boido0138.asesment1_0138.util.ViewModelFactory
-import java.util.*
+import java.util.Calendar
 
 const val KEY_ID_EXPENSE = "idExpense"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseScreen(navController: NavController, id : Long? = null) {
+fun AddExpenseScreen(navController: NavHostController, id : Long? = null) {
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel : ExpenseViewModel = viewModel(factory = factory)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -70,7 +102,16 @@ fun AddExpenseScreen(navController: NavController, id : Long? = null) {
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                ),
+                actions = {
+                    if(id != null){
+                        DeleteAction {
+                            viewModel.delete(id)
+                            navController.popBackStack()
+                        }
+                    }
+
+                }
             )
         }
     ) { innerPadding ->
@@ -80,21 +121,20 @@ fun AddExpenseScreen(navController: NavController, id : Long? = null) {
                 .padding(16.dp)
                 .fillMaxSize(),
             navController = navController,
-            id = id
+            id = id,
+            context = context,
+            viewModel = viewModel,
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null) {
-    val context = LocalContext.current
-    val factory = ViewModelFactory(context)
-    val viewModel : ExpenseViewModel = viewModel(factory = factory)
+fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null, context: Context, viewModel: ExpenseViewModel) {
+
     val dateLabel = stringResource(id = R.string.date_label)
     val tagsLabel = stringResource(id = R.string.tags_label)
 
-    ExpenseList.tempExpense = Expense(1, "", 0, tagsLabel ,dateLabel)
 
     var value by rememberSaveable { mutableStateOf("") }
     var valueError by rememberSaveable { mutableStateOf(false) }
@@ -269,9 +309,9 @@ fun AddExpenseScreenContent(modifier: Modifier = Modifier, navController: NavCon
 
                 if(id == null){
                     viewModel.insert(title,value.toInt(),tags, date)
-                }else{
-                    viewModel.update(id,title, value.toInt(),tags,date)
-                }
+                    }else{
+                        viewModel.update(id,title, value.toInt(),tags,date)
+                    }
                 navController.popBackStack()
             },
             modifier = Modifier.fillMaxWidth()
@@ -290,6 +330,36 @@ fun ErrorNotification(isError: Boolean, message: String) {
             style = MaterialTheme.typography.bodySmall,
             modifier = Modifier.padding(top = 4.dp)
         )
+    }
+}
+
+@Composable
+fun DeleteAction(delete: () -> Unit){
+    var expanded by remember { mutableStateOf(false)}
+
+    IconButton(onClick = { expanded = !expanded }) {
+        Icon(
+            imageVector = Icons.Filled.MoreVert,
+            contentDescription = stringResource(id = R.string.other),
+            tint = MaterialTheme.colorScheme.primary
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(id = R.string.delete_expense)
+                    )
+                },
+                onClick = {
+                    expanded = false
+                    delete()
+                }
+            )
+        }
     }
 }
 

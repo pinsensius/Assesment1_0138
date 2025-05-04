@@ -29,7 +29,10 @@
     <string name="share_template">Pengeluaran: %1$s\nPemasukan: %2$s\n\nUang Sekarang: %3$s</string>
     <string name="share_title">Bagikan data melalui…</string>
     <string name="clicked_card">%1$s diklik!</string>
-    <string name="edit_expense">Edit Pengeluaran</string>
-    <string name="edit_income">Edit Pemasukan</string>
+    <string name="edit_expense">Edit pengeluaran</string>
+    <string name="edit_income">Edit pemasukan</string>
     <string name="invalid">Judul, Jumlah, dan Tag tidak boleh kosong!</string>
+    <string name="other">Lainnya</string>
+    <string name="delete_expense">Hapus pengeluaran</string>
+    <string name="delete_income">Hapus pemasukan</string>
 </resources>

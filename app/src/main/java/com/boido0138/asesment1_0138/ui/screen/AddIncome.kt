@@ -1,5 +1,6 @@
 package com.boido0138.asesment1_0138.ui.screen
 
+import android.content.Context
 import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -28,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.Income
@@ -40,7 +42,11 @@ import java.util.Calendar
 const val KEY_ID_INCOME = "idIncome"
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddIncomeScreen(navController: NavController, id : Long? = null){
+fun AddIncomeScreen(navController: NavHostController, id : Long? = null){
+    val context = LocalContext.current
+    val factory = ViewModelFactory(context)
+    val viewModel : IncomeViewModel = viewModel(factory = factory)
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -71,7 +77,15 @@ fun AddIncomeScreen(navController: NavController, id : Long? = null){
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                )
+                ),
+                actions = {
+                    if(id != null){
+                        DeleteAction {
+                            viewModel.delete(id)
+                            navController.popBackStack()
+                        }
+                    }
+                }
             )
         }
     ) { innerPadding ->
@@ -81,17 +95,17 @@ fun AddIncomeScreen(navController: NavController, id : Long? = null){
                 .padding(16.dp)
                 .fillMaxSize(),
             navController,
-            id
+            id,
+            context,
+            viewModel
         )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null) {
-    val context = LocalContext.current
-    val factory = ViewModelFactory(context)
-    val viewModel : IncomeViewModel = viewModel(factory = factory)
+fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavController, id : Long? = null, context: Context, viewModel: IncomeViewModel) {
+
 
     val dateLabel = stringResource(id = R.string.date_label)
 
@@ -127,7 +141,7 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
         )
 
         Text(
-            text = stringResource(id = R.string.add_income),
+            text = if(id == null) stringResource(id = R.string.add_income) else stringResource(id = R.string.edit_income),
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.SemiBold,
             textAlign = TextAlign.Center

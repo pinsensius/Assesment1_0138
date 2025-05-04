@@ -44,4 +44,10 @@ class IncomeViewModel(private val dao: IncomeDao) : ViewModel() {
             dao.update(income)
         }
     }
+
+    fun delete(id: Long){
+        viewModelScope.launch(Dispatchers.IO) {
+            dao.deleteById(id)
+        }
+    }
 }
