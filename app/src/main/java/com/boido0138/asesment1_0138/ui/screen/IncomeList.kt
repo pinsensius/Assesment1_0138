@@ -32,9 +32,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -53,14 +50,19 @@ import com.boido0138.asesment1_0138.model.Income
 import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.navigation.Screen
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+import com.boido0138.asesment1_0138.util.SettingsDataStore
 import com.boido0138.asesment1_0138.util.ViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IncomeListScreen(navController: NavHostController) {
-    var showList by remember { mutableStateOf(true) }
+    val dataStore = SettingsDataStore(LocalContext.current)
+    val showList by dataStore.layoutFlow.collectAsState(true)
 
     Scaffold(
         topBar = {
@@ -84,7 +86,9 @@ fun IncomeListScreen(navController: NavHostController) {
                 actions = {
                     IconButton(
                         onClick = {
-                            showList = !showList
+                            CoroutineScope(Dispatchers.IO).launch {
+                                dataStore.saveLayout(!showList)
+                            }
                         }
                     ) {
                         Icon(
