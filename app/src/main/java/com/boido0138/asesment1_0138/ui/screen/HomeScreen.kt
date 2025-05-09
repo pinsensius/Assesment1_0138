@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -50,7 +51,12 @@ import com.boido0138.asesment1_0138.model.ExpenseViewModel
 import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.navigation.Screen
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+import com.boido0138.asesment1_0138.ui.theme.ThemeOption
+import com.boido0138.asesment1_0138.util.SettingsDataStore
 import com.boido0138.asesment1_0138.util.ViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -62,6 +68,7 @@ fun HomeScreen(navController: NavController) {
     val expenseViewModel : ExpenseViewModel = viewModel(factory = factory)
     val incomeViewModel : IncomeViewModel = viewModel(factory = factory)
     var menuExpanded by remember { mutableStateOf(false) }
+    val dataStore = SettingsDataStore(context)
 
     Scaffold(
         topBar = {
@@ -109,6 +116,8 @@ fun HomeScreen(navController: NavController) {
                             )
                         }
                     }
+
+                    ThemeSelector(dataStore = dataStore)
                 }
             )
         }
@@ -238,11 +247,105 @@ private fun shareKeuangan(context: Context, message: String){
     }
 }
 
+@Composable
+fun ThemeSelector(dataStore: SettingsDataStore){
+
+    var expanded by remember { mutableStateOf(false) }
+
+    IconButton(
+        onClick = {
+            expanded = true
+        },
+    ) {
+        Icon(
+            imageVector = Icons.Filled.MoreVert,
+            contentDescription = stringResource(id = R.string.other),
+            tint = MaterialTheme.colorScheme.onPrimaryContainer
+        )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(text = ThemeOption.LightTheme.name)
+                },
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveTheme(ThemeOption.LightTheme.name)
+                    }
+                }
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Text(text = ThemeOption.DarkTheme.name)
+                },
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveTheme(ThemeOption.DarkTheme.name)
+                    }
+                }
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Text(text = ThemeOption.MediumContrastLightTheme.name)
+                },
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveTheme(ThemeOption.MediumContrastLightTheme.name)
+                    }
+                }
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Text(text = ThemeOption.HighContrastLightTheme.name)
+                },
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveTheme(ThemeOption.HighContrastLightTheme.name)
+                    }
+                }
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Text(text = ThemeOption.MediumContrastDarkTheme.name)
+                },
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveTheme(ThemeOption.MediumContrastDarkTheme.name)
+                    }
+                }
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Text(text = ThemeOption.HighContrastDarkTheme.name)
+                },
+                onClick = {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        dataStore.saveTheme(ThemeOption.HighContrastDarkTheme.name)
+                    }
+                }
+            )
+        }
+    }
+}
+
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun HomeScreenPreview(){
-    Asesment1_0138Theme {
-        HomeScreen(rememberNavController())
-    }
+
+    Asesment1_0138Theme (
+        theme = ThemeOption.LightTheme.name,
+        content = {
+            HomeScreen(rememberNavController())
+        }
+    )
+
 }

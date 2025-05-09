@@ -51,6 +51,7 @@ package com.boido0138.asesment1_0138.ui.screen
         import com.boido0138.asesment1_0138.model.ExpenseViewModel
         import com.boido0138.asesment1_0138.navigation.Screen
         import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+        import com.boido0138.asesment1_0138.ui.theme.ThemeOption
         import com.boido0138.asesment1_0138.util.SettingsDataStore
         import com.boido0138.asesment1_0138.util.ViewModelFactory
         import kotlinx.coroutines.CoroutineScope
@@ -285,7 +286,12 @@ fun DataCard(expense: Expense, onClick : () -> Unit) {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun ExpenseListScreenPreview(){
-    Asesment1_0138Theme {
-        ExpenseListScreen(rememberNavController())
-    }
+
+    Asesment1_0138Theme (
+        theme = ThemeOption.LightTheme.name,
+        content = {
+            ExpenseListScreen(rememberNavController())
+        }
+    )
+
 }

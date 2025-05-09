@@ -59,6 +59,7 @@ import androidx.navigation.compose.rememberNavController
 import com.boido0138.asesment1_0138.R
 import com.boido0138.asesment1_0138.model.IncomeViewModel
 import com.boido0138.asesment1_0138.ui.theme.Asesment1_0138Theme
+import com.boido0138.asesment1_0138.ui.theme.ThemeOption
 import com.boido0138.asesment1_0138.util.ViewModelFactory
 import java.util.Calendar
 
@@ -288,7 +289,12 @@ fun AddIncomeScreenContent(modifier: Modifier = Modifier, navController: NavCont
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun AddIncomeScreenPreview(){
-    Asesment1_0138Theme {
-        AddIncomeScreen(rememberNavController())
-    }
+    
+    Asesment1_0138Theme (
+        theme = ThemeOption.LightTheme.name,
+        content = {
+            AddIncomeScreen(rememberNavController())
+        }
+    )
+
 }
