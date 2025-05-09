@@ -38,4 +38,6 @@
     <string name="delete_message">Hapus data ini?</string>
     <string name="delete_button">Hapus</string>
     <string name="cancel_button">Batal</string>
+    <string name="list_view">Tampilan list</string>
+    <string name="grid_view">Tampilan grid</string>
 </resources>
