@@ -35,4 +35,7 @@
     <string name="other">Lainnya</string>
     <string name="delete_expense">Hapus pengeluaran</string>
     <string name="delete_income">Hapus pemasukan</string>
+    <string name="delete_message">Hapus data ini?</string>
+    <string name="delete_button">Hapus</string>
+    <string name="cancel_button">Batal</string>
 </resources>

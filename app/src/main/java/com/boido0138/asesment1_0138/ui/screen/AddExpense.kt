@@ -76,6 +76,8 @@ fun AddExpenseScreen(navController: NavHostController, id : Long? = null) {
     val factory = ViewModelFactory(context)
     val viewModel : ExpenseViewModel = viewModel(factory = factory)
 
+    var showDialog by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -106,8 +108,7 @@ fun AddExpenseScreen(navController: NavHostController, id : Long? = null) {
                 actions = {
                     if(id != null){
                         DeleteAction {
-                            viewModel.delete(id)
-                            navController.popBackStack()
+                            showDialog = true
                         }
                     }
 
@@ -125,6 +126,16 @@ fun AddExpenseScreen(navController: NavHostController, id : Long? = null) {
             context = context,
             viewModel = viewModel,
         )
+
+        if(id != null && showDialog){
+            DisplayAlertDialog(
+                onDismissRequest = { showDialog = false }
+            ){
+                showDialog = false
+                viewModel.delete(id)
+                navController.popBackStack()
+            }
+        }
     }
 }
 
